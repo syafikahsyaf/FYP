@@ -4,79 +4,75 @@ import { GLTFLoader } from "/FYP/libs/three.js-r132/examples/jsm/loaders/GLTFLoa
 
 const THREE = window.MINDAR.IMAGE.THREE;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   const start = async () => {
     try {
 
       /* ===========================================================
-         BUTTON: BACK + AUDIO + INFO
+         BACK BUTTON
       ============================================================ */
       const backBtn = document.createElement("a");
-      backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%; height:auto; object-fit:contain;">`;
-      backBtn.onclick = () => { window.location.href = "/FYP/tongkitarsemula.html"; };
+      backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%">`;
+      backBtn.onclick = () => window.location.href = "/FYP/tongkitarsemula.html";
       Object.assign(backBtn.style, {
         position: "fixed",
-        top: "clamp(10px, 3vw, 20px)",
-        left: "clamp(10px, 3vw, 20px)",
-        width: "clamp(70px, 12vw, 110px)",
-        cursor: "pointer",
-        zIndex: "9999",
-        textDecoration: "none",
-        display: "block",
+        top: "12px",
+        left: "12px",
+        width: "90px",
+        zIndex: "9999"
       });
       document.body.appendChild(backBtn);
 
+      /* ===========================================================
+         INFO BUTTON
+      ============================================================ */
       const infoBtn = document.createElement("div");
       infoBtn.innerHTML = "💡";
       Object.assign(infoBtn.style, {
         position: "fixed",
         top: "12px",
-        right: "20px",
-        fontSize: "clamp(32px, 8vw, 48px)",
-        cursor: "pointer",
+        right: "16px",
+        fontSize: "48px",
         zIndex: "9999",
-        userSelect: "none"
+        userSelect: "none",
+        cursor: "pointer"
       });
       document.body.appendChild(infoBtn);
 
+      /* ===========================================================
+         INFO POPUP (SAFE FOR MOBILE)
+      ============================================================ */
       const infoText = document.createElement("div");
-      infoText.innerText = "INFO";
       Object.assign(infoText.style, {
         position: "fixed",
         bottom: "12px",
         left: "50%",
         transform: "translateX(-50%)",
-        padding: "14px 20px",
         maxWidth: "92%",
+        padding: "14px 20px",
         background: "#8cd878",
         border: "3px solid #5faa48",
-        color: "#1e4d14",
-        fontSize: "clamp(14px, 3.5vw, 22px)",
+        borderRadius: "22px",
+        fontSize: "clamp(14px,3.5vw,20px)",
         fontWeight: "bold",
-        fontFamily: "'Comic Sans MS','Poppins'",
-        borderRadius: "25px",
-        boxShadow: "0px 8px 18px rgba(80,150,90,0.3)",
+        textAlign: "center",
         display: "none",
-        pointerEvents: "none",
         opacity: "0",
-        transition: "all .25s ease",
+        transition: "0.25s",
         zIndex: "9999",
+        pointerEvents: "none"
       });
       document.body.appendChild(infoText);
 
       let infoShown = false;
       infoBtn.onclick = () => {
         infoShown = !infoShown;
-        if(infoShown){
+        if (infoShown) {
           infoText.style.display = "block";
-          setTimeout(()=>{ 
-            infoText.style.opacity = "1"; 
-            infoText.style.transform = "translateX(-50%) scale(1)";
-          }, 10);
+          setTimeout(() => infoText.style.opacity = "1", 10);
         } else {
           infoText.style.opacity = "0";
-          infoText.style.transform = "translateX(-50%) scale(0.9)";
-          setTimeout(()=>infoText.style.display="none",200);
+          setTimeout(() => infoText.style.display = "none", 250);
         }
       };
 
@@ -85,183 +81,197 @@ document.addEventListener('DOMContentLoaded', () => {
       ============================================================ */
       const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
-        imageTargetSrc: "/FYP/assets/targets/tongkitar/tongbiru3.mind",
+        imageTargetSrc: "/FYP/assets/targets/tongkitar/tongbiru3.mind"
       });
 
       const { renderer, scene, camera } = mindarThree;
-      const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
-      scene.add(light);
+      scene.add(new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1));
 
+      /* ===========================================================
+         LOADERS
+      ============================================================ */
       const dLoader = new DRACOLoader();
       dLoader.setDecoderPath("/FYP/libs/draco/");
       const gltfLoader = new GLTFLoader();
       gltfLoader.setDRACOLoader(dLoader);
 
       /* ===========================================================
-         3 MODEL + 3 AUDIO + 3 TARGET
+         TARGET DATA
       ============================================================ */
       const targets = [
-        { glb: "/FYP/assets/models/Mtongkitar/kertasmain.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru1.mp3", scale: 0.2, info: "Tong biru sesuai untuk sampah jenis kertas" },
-        { glb: "/FYP/assets/models/Mtongkitar/kertas1.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru2.mp3", scale: 0.2, info: "Bahan kertas yang boleh dikitar semula adalah seperti surat khabar, kotak kertas dan sampul surat" },
-        { glb: "/FYP/assets/models/Mtongkitar/kertas2.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru3.mp3", scale: 0.18, info: "Bahan kertas yang tak boleh kitar semula adalah seperti cawan kertas, kotak berminyak dan nota lekat" }
+        {
+          glb: "/FYP/assets/models/Mtongkitar/kertasmain.glb",
+          audio: "/FYP/assets/suara/Stongkitar/tbiru1.mp3",
+          scale: 0.2,
+          info: "Tong biru sesuai untuk sampah jenis kertas"
+        },
+        {
+          glb: "/FYP/assets/models/Mtongkitar/kertas1.glb",
+          audio: "/FYP/assets/suara/Stongkitar/tbiru2.mp3",
+          scale: 0.2,
+          info: "Bahan kertas yang boleh dikitar semula adalah seperti surat khabar,kotak, dan sampul surat ."
+        },
+        {
+          glb: "/FYP/assets/models/Mtongkitar/kertas2.glb",
+          audio: "/FYP/assets/suara/Stongkitar/tbiru3.mp3",
+          scale: 0.18,
+          info: "Bahan kertas yang tidak boleh dikitar semula adalah seperti cawan kertas, kotak berminyak, dan nota lekat(sticky note)."
+        }
       ];
 
+      const mixers = [];
       const listener = new THREE.AudioListener();
       camera.add(listener);
 
       /* ===========================================================
-         AUDIO UNLOCK MOBILE
+         AUDIO UNLOCK (MOBILE REQUIRED)
       ============================================================ */
-      let audioUnlocked = false;
-      const unlockAudio = () => {
-        if(audioUnlocked) return;
+      document.addEventListener("touchstart", () => {
         const ctx = THREE.AudioContext.getContext();
-        if(ctx.state==="suspended") ctx.resume();
-        audioUnlocked = true;
-      };
-      document.addEventListener("touchstart", unlockAudio, {once:true});
-      document.addEventListener("click", unlockAudio, {once:true});
+        if (ctx.state === "suspended") ctx.resume();
+      }, { once: true });
 
       /* ===========================================================
-         LOAD MODELS & AUDIO
+         LOAD TARGETS
       ============================================================ */
-      for(let i=0;i<targets.length;i++){
+      for (let i = 0; i < targets.length; i++) {
         const anchor = mindarThree.addAnchor(i);
-        const gltf = await new Promise((resolve,reject)=>{
-          gltfLoader.load(targets[i].glb, resolve, undefined, reject);
-        });
-        gltf.scene.scale.set(targets[i].scale, targets[i].scale, targets[i].scale);
-        anchor.group.add(gltf.scene);
-        targets[i].modelScene = gltf.scene;
 
-        // Animation
+        const gltf = await new Promise(res =>
+          gltfLoader.load(targets[i].glb, res)
+        );
+
+        gltf.scene.scale.setScalar(targets[i].scale);
+        anchor.group.add(gltf.scene);
+        targets[i].model = gltf.scene;
+
         const mixer = new THREE.AnimationMixer(gltf.scene);
-        if(gltf.animations.length>0){
+        if (gltf.animations.length) {
           mixer.clipAction(gltf.animations[0]).play();
         }
-        targets[i].mixer = mixer;
+        mixers.push(mixer);
 
-        // Audio
-        const clip1 = await loadAudio(targets[i].audioMain);
-        const mainAudio = new THREE.PositionalAudio(listener);
-        mainAudio.setBuffer(clip1);
-        mainAudio.setLoop(true);
-        mainAudio.setRefDistance(999999);
-        anchor.group.add(mainAudio);
-        targets[i].mainAudio = mainAudio;
-        targets[i].audioReady = true;
+        const buffer = await loadAudio(targets[i].audio);
+        const audio = new THREE.PositionalAudio(listener);
+        audio.setBuffer(buffer);
+        audio.setLoop(true);
+        audio.setRefDistance(999999);
+        anchor.group.add(audio);
+        targets[i].audio = audio;
 
-        // Target Found
-        anchor.onTargetFound = ()=>{
+        anchor.onTargetFound = () => {
           targets[i].active = true;
           infoText.innerText = targets[i].info;
-
-          // Restart animation
-          if(targets[i].mixer){
-            targets[i].mixer.stopAllAction();
-            if(gltf.animations.length>0)
-              targets[i].mixer.clipAction(gltf.animations[0]).play();
-          }
-
-          // Pause audio lain
-          targets.forEach((t,idx)=>{
-            if(idx!==i && t.mainAudio) t.mainAudio.pause();
-          });
-
-          // Play audio target
-          if(targets[i].mainAudio && !targets[i].mainAudio.isPlaying){
-            targets[i].mainAudio.play();
-          }
+          targets.forEach((t, idx) => idx !== i && t.audio?.pause());
         };
 
-        // Target Lost
-        anchor.onTargetLost = ()=>{
+        anchor.onTargetLost = () => {
           targets[i].active = false;
-          if(targets[i].mainAudio){
-            targets[i].mainAudio.pause();
-            try{targets[i].mainAudio.currentTime=0}catch(e){}
-          }
+          audio.pause();
         };
       }
 
       /* ===========================================================
-         FAILSAFE AUDIO STOP
+         TAP vs DRAG SYSTEM (IMPORTANT)
       ============================================================ */
-      setInterval(()=>{
-        const anyActive = targets.some(t=>t.active);
-        if(!anyActive){
-          targets.forEach(t=>{
-            if(t.mainAudio && t.mainAudio.isPlaying){
-              t.mainAudio.pause();
-              try{t.mainAudio.currentTime=0}catch(e){}
-            }
-          });
-        }
-      },500);
+      let dragging = false;
+      let dragDist = 0;
+      let sx = 0, sy = 0;
+      const TAP_THRESHOLD = 8;
 
-      /* ===========================================================
-         TAP / CLICK MODEL FOR AUDIO
-      ============================================================ */
-      const detectTap = (x,y)=>{
-        const mouse = new THREE.Vector2();
-        mouse.x = (x/window.innerWidth)*2-1;
-        mouse.y = -(y/window.innerHeight)*2+1;
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse,camera);
-        const activeIndex = targets.findIndex(t=>t.active);
-        if(activeIndex===-1) return;
-        const t = targets[activeIndex];
-        const group = mindarThree.anchors[activeIndex].group;
-        const intersects = raycaster.intersectObjects(group.children,true);
-        if(intersects.length===0) return;
-        if(!t.mainAudio||!t.audioReady) return;
-        if(t.mainAudio.isPlaying) t.mainAudio.pause();
-        else t.mainAudio.play();
+      const rotate = (dx, dy) => {
+        targets.forEach(t => {
+          if (t.active && t.model) {
+            t.model.rotation.y += dx * 0.01;
+            t.model.rotation.x += dy * 0.01;
+          }
+        });
       };
-      document.addEventListener("click", e=>{ detectTap(e.clientX,e.clientY); });
-      document.addEventListener("touchstart", e=>{ detectTap(e.touches[0].clientX,e.touches[0].clientY); });
 
-      /* ===========================================================
-         ROTATE MODEL
-      ============================================================ */
-      let isDragging=false, prevX=0, prevY=0;
+      const tryTap = (x, y) => {
+        const mouse = new THREE.Vector2(
+          (x / window.innerWidth) * 2 - 1,
+          -(y / window.innerHeight) * 2 + 1
+        );
+        const ray = new THREE.Raycaster();
+        ray.setFromCamera(mouse, camera);
 
-      // Desktop
-      document.addEventListener("mousedown",e=>{isDragging=true; prevX=e.clientX; prevY=e.clientY;});
-      document.addEventListener("mouseup",()=>{isDragging=false;});
-      document.addEventListener("mousemove",e=>{
-        if(!isDragging) return;
-        const dx=e.clientX-prevX;
-        const dy=e.clientY-prevY;
-        targets.forEach(t=>{ if(t.active && t.modelScene){ t.modelScene.rotation.y+=dx*0.01; t.modelScene.rotation.x+=dy*0.01; } });
-        prevX=e.clientX; prevY=e.clientY;
+        const idx = targets.findIndex(t => t.active);
+        if (idx === -1) return;
+
+        const hits = ray.intersectObjects(
+          mindarThree.anchors[idx].group.children,
+          true
+        );
+
+        if (hits.length) {
+          const a = targets[idx].audio;
+          a.isPlaying ? a.pause() : a.play();
+        }
+      };
+
+      /* DESKTOP */
+      document.addEventListener("mousedown", e => {
+        dragging = true; dragDist = 0;
+        sx = e.clientX; sy = e.clientY;
       });
 
-      // Mobile
-      document.addEventListener("touchstart", e=>{isDragging=true; prevX=e.touches[0].clientX; prevY=e.touches[0].clientY;});
-      document.addEventListener("touchend",()=>{isDragging=false;});
-      document.addEventListener("touchmove", e=>{
-        if(!isDragging) return;
-        const dx=e.touches[0].clientX-prevX;
-        const dy=e.touches[0].clientY-prevY;
-        targets.forEach(t=>{ if(t.active && t.modelScene){ t.modelScene.rotation.y+=dx*0.01; t.modelScene.rotation.x+=dy*0.01; } });
-        prevX=e.touches[0].clientX; prevY=e.touches[0].clientY;
+      document.addEventListener("mousemove", e => {
+        if (!dragging) return;
+        const dx = e.clientX - sx;
+        const dy = e.clientY - sy;
+        dragDist += Math.abs(dx) + Math.abs(dy);
+        rotate(dx, dy);
+        sx = e.clientX; sy = e.clientY;
+      });
+
+      document.addEventListener("mouseup", e => {
+        if (dragDist < TAP_THRESHOLD) tryTap(e.clientX, e.clientY);
+        dragging = false;
+      });
+
+      /* MOBILE */
+      document.addEventListener("touchstart", e => {
+        dragging = true; dragDist = 0;
+        sx = e.touches[0].clientX;
+        sy = e.touches[0].clientY;
+      });
+
+      document.addEventListener("touchmove", e => {
+        if (!dragging) return;
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+        const dx = x - sx;
+        const dy = y - sy;
+        dragDist += Math.abs(dx) + Math.abs(dy);
+        rotate(dx, dy);
+        sx = x; sy = y;
+      });
+
+      document.addEventListener("touchend", e => {
+        if (dragDist < TAP_THRESHOLD) {
+          const t = e.changedTouches[0];
+          tryTap(t.clientX, t.clientY);
+        }
+        dragging = false;
       });
 
       /* ===========================================================
-         START MINDAR
+         START
       ============================================================ */
       await mindarThree.start();
       const clock = new THREE.Clock();
-      renderer.setAnimationLoop(()=>{
+
+      renderer.setAnimationLoop(() => {
         const delta = clock.getDelta();
-        targets.forEach(t=>{ if(t.active && t.mixer) t.mixer.update(delta); });
-        renderer.render(scene,camera);
+        mixers.forEach(m => m.update(delta));
+        renderer.render(scene, camera);
       });
 
-    } catch(e){
-      console.error("Error initializing AR:",e);
+    } catch (err) {
+      console.error(err);
     }
   };
+
   start();
 });
