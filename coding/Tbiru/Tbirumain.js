@@ -4,77 +4,80 @@ import { GLTFLoader } from "/FYP/libs/three.js-r132/examples/jsm/loaders/GLTFLoa
 
 const THREE = window.MINDAR.IMAGE.THREE;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => {
   const start = async () => {
     try {
 
       /* ===========================================================
-         GLOBAL STATE (WAJIB ATAS SEKALI)
-      ============================================================ */
-      let isDragging = false;
-      let prevX = 0;
-      let prevY = 0;
-      let audioUnlocked = false;
-
-      /* ===========================================================
-         BACK BUTTON
+         BUTTON: BACK + AUDIO + INFO
       ============================================================ */
       const backBtn = document.createElement("a");
-      backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%">`;
-      backBtn.onclick = () => location.href = "/FYP/tongkitarsemula.html";
+      backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%; height:auto; object-fit:contain;">`;
+      backBtn.onclick = () => { window.location.href = "/FYP/tongkitarsemula.html"; };
       Object.assign(backBtn.style, {
         position: "fixed",
-        top: "clamp(10px,3vw,20px)",
-        left: "clamp(10px,3vw,20px)",
-        width: "clamp(70px,12vw,110px)",
-        zIndex: 9999
+        top: "clamp(10px, 3vw, 20px)",
+        left: "clamp(10px, 3vw, 20px)",
+        width: "clamp(70px, 12vw, 110px)",
+        cursor: "pointer",
+        zIndex: "9999",
+        textDecoration: "none",
+        display: "block",
       });
       document.body.appendChild(backBtn);
 
-      /* ===========================================================
-         INFO BUTTON + POPUP
-      ============================================================ */
       const infoBtn = document.createElement("div");
       infoBtn.innerHTML = "💡";
       Object.assign(infoBtn.style, {
         position: "fixed",
-        top: "10px",
+        top: "12px",
         right: "20px",
-        fontSize: "clamp(32px,8vw,48px)",
+        fontSize: "clamp(32px, 8vw, 48px)",
         cursor: "pointer",
-        zIndex: 9999,
+        zIndex: "9999",
         userSelect: "none"
       });
       document.body.appendChild(infoBtn);
 
       const infoText = document.createElement("div");
+      infoText.innerText = "INFO";
       Object.assign(infoText.style, {
         position: "fixed",
         bottom: "12px",
         left: "50%",
         transform: "translateX(-50%)",
-        maxWidth: "92%",
         padding: "14px 20px",
+        maxWidth: "92%",
         background: "#8cd878",
         border: "3px solid #5faa48",
         color: "#1e4d14",
-        fontSize: "clamp(14px,3.5vw,22px)",
+        fontSize: "clamp(14px, 3.5vw, 22px)",
         fontWeight: "bold",
-        borderRadius: "22px",
-        boxShadow: "0 8px 18px rgba(80,150,90,.3)",
+        fontFamily: "'Comic Sans MS','Poppins'",
+        borderRadius: "25px",
+        boxShadow: "0px 8px 18px rgba(80,150,90,0.3)",
         display: "none",
-        opacity: 0,
         pointerEvents: "none",
+        opacity: "0",
         transition: "all .25s ease",
-        zIndex: 9999
+        zIndex: "9999",
       });
       document.body.appendChild(infoText);
 
       let infoShown = false;
       infoBtn.onclick = () => {
         infoShown = !infoShown;
-        infoText.style.display = infoShown ? "block" : "none";
-        setTimeout(() => infoText.style.opacity = infoShown ? 1 : 0, 10);
+        if(infoShown){
+          infoText.style.display = "block";
+          setTimeout(()=>{ 
+            infoText.style.opacity = "1"; 
+            infoText.style.transform = "translateX(-50%) scale(1)";
+          }, 10);
+        } else {
+          infoText.style.opacity = "0";
+          infoText.style.transform = "translateX(-50%) scale(0.9)";
+          setTimeout(()=>infoText.style.display="none",200);
+        }
       };
 
       /* ===========================================================
@@ -82,195 +85,183 @@ document.addEventListener("DOMContentLoaded", () => {
       ============================================================ */
       const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
-        imageTargetSrc: "/FYP/assets/targets/tongkitar/tongbiru3.mind"
+        imageTargetSrc: "/FYP/assets/targets/tongkitar/tongbiru3.mind",
       });
 
       const { renderer, scene, camera } = mindarThree;
-      scene.add(new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1));
+      const light = new THREE.HemisphereLight(0xffffff, 0xbbbbff, 1);
+      scene.add(light);
 
-      /* ===========================================================
-         LOADERS
-      ============================================================ */
       const dLoader = new DRACOLoader();
       dLoader.setDecoderPath("/FYP/libs/draco/");
       const gltfLoader = new GLTFLoader();
       gltfLoader.setDRACOLoader(dLoader);
 
       /* ===========================================================
-         TARGET DATA
+         3 MODEL + 3 AUDIO + 3 TARGET
       ============================================================ */
       const targets = [
-        {
-          glb: "/FYP/assets/models/Mtongkitar/kertasmain.glb",
-          audio: "/FYP/assets/suara/Stongkitar/tbiru1.mp3",
-          scale: 0.2,
-          info: "Tong biru sesuai untuk sampah jenis kertas"
-        },
-        {
-          glb: "/FYP/assets/models/Mtongkitar/kertas1.glb",
-          audio: "/FYP/assets/suara/Stongkitar/tbiru2.mp3",
-          scale: 0.2,
-          info: "Kertas boleh kitar semula seperti surat khabar & kotak"
-        },
-        {
-          glb: "/FYP/assets/models/Mtongkitar/kertas2.glb",
-          audio: "/FYP/assets/suara/Stongkitar/tbiru3.mp3",
-          scale: 0.18,
-          info: "Kertas berminyak & cawan kertas tidak boleh dikitar"
-        }
+        { glb: "/FYP/assets/models/Mtongkitar/kertasmain.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru1.mp3", scale: 0.2, info: "Tong biru sesuai untuk sampah jenis kertas" },
+        { glb: "/FYP/assets/models/Mtongkitar/kertas1.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru2.mp3", scale: 0.2, info: "Bahan kertas yang boleh dikitar semula adalah seperti surat khabar, kotak kertas dan sampul surat" },
+        { glb: "/FYP/assets/models/Mtongkitar/kertas2.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru3.mp3", scale: 0.18, info: "Bahan kertas yang tak boleh kitar semula adalah seperti cawan kertas, kotak berminyak dan nota lekat" }
       ];
 
-      const mixers = [];
       const listener = new THREE.AudioListener();
       camera.add(listener);
 
       /* ===========================================================
-         AUDIO UNLOCK (MOBILE SAFE)
+         AUDIO UNLOCK MOBILE
       ============================================================ */
+      let audioUnlocked = false;
       const unlockAudio = () => {
-        if (audioUnlocked) return;
+        if(audioUnlocked) return;
         const ctx = THREE.AudioContext.getContext();
-        if (ctx.state === "suspended") ctx.resume();
+        if(ctx.state==="suspended") ctx.resume();
         audioUnlocked = true;
       };
-      document.addEventListener("touchstart", unlockAudio, { once: true });
-      document.addEventListener("click", unlockAudio, { once: true });
+      document.addEventListener("touchstart", unlockAudio, {once:true});
+      document.addEventListener("click", unlockAudio, {once:true});
 
       /* ===========================================================
-         CREATE ANCHORS
+         LOAD MODELS & AUDIO
       ============================================================ */
-      for (let i = 0; i < targets.length; i++) {
+      for(let i=0;i<targets.length;i++){
         const anchor = mindarThree.addAnchor(i);
-
-        const gltf = await gltfLoader.loadAsync(targets[i].glb);
-        gltf.scene.scale.setScalar(targets[i].scale);
+        const gltf = await new Promise((resolve,reject)=>{
+          gltfLoader.load(targets[i].glb, resolve, undefined, reject);
+        });
+        gltf.scene.scale.set(targets[i].scale, targets[i].scale, targets[i].scale);
         anchor.group.add(gltf.scene);
-        targets[i].model = gltf.scene;
+        targets[i].modelScene = gltf.scene;
 
+        // Animation
         const mixer = new THREE.AnimationMixer(gltf.scene);
-        if (gltf.animations[0]) mixer.clipAction(gltf.animations[0]).play();
-        mixers.push(mixer);
+        if(gltf.animations.length>0){
+          mixer.clipAction(gltf.animations[0]).play();
+        }
+        targets[i].mixer = mixer;
 
-        const buffer = await loadAudio(targets[i].audio);
-        const sound = new THREE.PositionalAudio(listener);
-        sound.setBuffer(buffer);
-        sound.setLoop(true);
-        sound.setRefDistance(999999);
-        anchor.group.add(sound);
-        targets[i].audioObj = sound;
+        // Audio
+        const clip1 = await loadAudio(targets[i].audioMain);
+        const mainAudio = new THREE.PositionalAudio(listener);
+        mainAudio.setBuffer(clip1);
+        mainAudio.setLoop(true);
+        mainAudio.setRefDistance(999999);
+        anchor.group.add(mainAudio);
+        targets[i].mainAudio = mainAudio;
+        targets[i].audioReady = true;
 
-        anchor.onTargetFound = () => {
+        // Target Found
+        anchor.onTargetFound = ()=>{
           targets[i].active = true;
-          targets[i].audioReady = true;
           infoText.innerText = targets[i].info;
-          targets.forEach((t, idx) => {
-            if (idx !== i && t.audioObj) t.audioObj.pause();
+
+          // Restart animation
+          if(targets[i].mixer){
+            targets[i].mixer.stopAllAction();
+            if(gltf.animations.length>0)
+              targets[i].mixer.clipAction(gltf.animations[0]).play();
+          }
+
+          // Pause audio lain
+          targets.forEach((t,idx)=>{
+            if(idx!==i && t.mainAudio) t.mainAudio.pause();
           });
+
+          // Play audio target
+          if(targets[i].mainAudio && !targets[i].mainAudio.isPlaying){
+            targets[i].mainAudio.play();
+          }
         };
 
-        anchor.onTargetLost = () => {
+        // Target Lost
+        anchor.onTargetLost = ()=>{
           targets[i].active = false;
-          if (targets[i].audioObj) targets[i].audioObj.pause();
+          if(targets[i].mainAudio){
+            targets[i].mainAudio.pause();
+            try{targets[i].mainAudio.currentTime=0}catch(e){}
+          }
         };
       }
 
       /* ===========================================================
-         TAP → PLAY / PAUSE AUDIO
+         FAILSAFE AUDIO STOP
       ============================================================ */
-      const detectTap = (x, y) => {
-        const mouse = new THREE.Vector2(
-          (x / window.innerWidth) * 2 - 1,
-          -(y / window.innerHeight) * 2 + 1
-        );
-        const raycaster = new THREE.Raycaster();
-        raycaster.setFromCamera(mouse, camera);
-
-        const idx = targets.findIndex(t => t.active);
-        if (idx === -1) return;
-
-        const hits = raycaster.intersectObjects(
-          mindarThree.anchors[idx].group.children, true
-        );
-
-        if (hits.length && targets[idx].audioReady) {
-          const a = targets[idx].audioObj;
-          a.isPlaying ? a.pause() : a.play();
+      setInterval(()=>{
+        const anyActive = targets.some(t=>t.active);
+        if(!anyActive){
+          targets.forEach(t=>{
+            if(t.mainAudio && t.mainAudio.isPlaying){
+              t.mainAudio.pause();
+              try{t.mainAudio.currentTime=0}catch(e){}
+            }
+          });
         }
-      };
-
-      document.addEventListener("click", e =>
-        detectTap(e.clientX, e.clientY)
-      );
-
-      document.addEventListener("touchend", e => {
-        if (isDragging) return;
-        const t = e.changedTouches[0];
-        detectTap(t.clientX, t.clientY);
-      });
+      },500);
 
       /* ===========================================================
-         ROTATE (MOUSE + TOUCH)
+         TAP / CLICK MODEL FOR AUDIO
       ============================================================ */
-      document.addEventListener("mousedown", e => {
-        isDragging = true;
-        prevX = e.clientX;
-        prevY = e.clientY;
-      });
-
-      document.addEventListener("mouseup", () => isDragging = false);
-
-      document.addEventListener("mousemove", e => {
-        if (!isDragging) return;
-        const dx = e.clientX - prevX;
-        const dy = e.clientY - prevY;
-        targets.forEach(t => {
-          if (t.active && t.model) {
-            t.model.rotation.y += dx * 0.01;
-            t.model.rotation.x += dy * 0.01;
-          }
-        });
-        prevX = e.clientX;
-        prevY = e.clientY;
-      });
-
-      document.addEventListener("touchstart", e => {
-        isDragging = true;
-        prevX = e.touches[0].clientX;
-        prevY = e.touches[0].clientY;
-      });
-
-      document.addEventListener("touchmove", e => {
-        if (!isDragging) return;
-        const x = e.touches[0].clientX;
-        const y = e.touches[0].clientY;
-        const dx = x - prevX;
-        const dy = y - prevY;
-        targets.forEach(t => {
-          if (t.active && t.model) {
-            t.model.rotation.y += dx * 0.01;
-            t.model.rotation.x += dy * 0.01;
-          }
-        });
-        prevX = x;
-        prevY = y;
-      });
-
-      document.addEventListener("touchend", () => isDragging = false);
+      const detectTap = (x,y)=>{
+        const mouse = new THREE.Vector2();
+        mouse.x = (x/window.innerWidth)*2-1;
+        mouse.y = -(y/window.innerHeight)*2+1;
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse,camera);
+        const activeIndex = targets.findIndex(t=>t.active);
+        if(activeIndex===-1) return;
+        const t = targets[activeIndex];
+        const group = mindarThree.anchors[activeIndex].group;
+        const intersects = raycaster.intersectObjects(group.children,true);
+        if(intersects.length===0) return;
+        if(!t.mainAudio||!t.audioReady) return;
+        if(t.mainAudio.isPlaying) t.mainAudio.pause();
+        else t.mainAudio.play();
+      };
+      document.addEventListener("click", e=>{ detectTap(e.clientX,e.clientY); });
+      document.addEventListener("touchstart", e=>{ detectTap(e.touches[0].clientX,e.touches[0].clientY); });
 
       /* ===========================================================
-         START
+         ROTATE MODEL
+      ============================================================ */
+      let isDragging=false, prevX=0, prevY=0;
+
+      // Desktop
+      document.addEventListener("mousedown",e=>{isDragging=true; prevX=e.clientX; prevY=e.clientY;});
+      document.addEventListener("mouseup",()=>{isDragging=false;});
+      document.addEventListener("mousemove",e=>{
+        if(!isDragging) return;
+        const dx=e.clientX-prevX;
+        const dy=e.clientY-prevY;
+        targets.forEach(t=>{ if(t.active && t.modelScene){ t.modelScene.rotation.y+=dx*0.01; t.modelScene.rotation.x+=dy*0.01; } });
+        prevX=e.clientX; prevY=e.clientY;
+      });
+
+      // Mobile
+      document.addEventListener("touchstart", e=>{isDragging=true; prevX=e.touches[0].clientX; prevY=e.touches[0].clientY;});
+      document.addEventListener("touchend",()=>{isDragging=false;});
+      document.addEventListener("touchmove", e=>{
+        if(!isDragging) return;
+        const dx=e.touches[0].clientX-prevX;
+        const dy=e.touches[0].clientY-prevY;
+        targets.forEach(t=>{ if(t.active && t.modelScene){ t.modelScene.rotation.y+=dx*0.01; t.modelScene.rotation.x+=dy*0.01; } });
+        prevX=e.touches[0].clientX; prevY=e.touches[0].clientY;
+      });
+
+      /* ===========================================================
+         START MINDAR
       ============================================================ */
       await mindarThree.start();
       const clock = new THREE.Clock();
-      renderer.setAnimationLoop(() => {
-        mixers.forEach(m => m.update(clock.getDelta()));
-        renderer.render(scene, camera);
+      renderer.setAnimationLoop(()=>{
+        const delta = clock.getDelta();
+        targets.forEach(t=>{ if(t.active && t.mixer) t.mixer.update(delta); });
+        renderer.render(scene,camera);
       });
 
-    } catch (err) {
-      console.error("AR Error:", err);
+    } catch(e){
+      console.error("Error initializing AR:",e);
     }
   };
-
   start();
 });
