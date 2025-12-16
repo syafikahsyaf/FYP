@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECO-RECYCLE</title>
+
+  <!-- GOOGLE FONTS -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600&family=Fredoka+One&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+/* ————————————————— GLOBAL ————————————————— */
+body {
+    margin: 0;
+    font-family: 'Quicksand', sans-serif;
+    overflow-y: auto;
+    background: url("image-menu/menu.png") no-repeat center center/cover;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100dvh;
+    padding: 0;
+}
+
+/* ————————————————— MAIN CONTAINER ————————————————— */
+.container {
+    width: 100%;
+    max-width: 600px;
+    padding: 20px 20px 100px;
+    text-align: center;
+    box-sizing: border-box;
+    position: relative;
+}
+
+/* ————————————————— TOP ICONS ————————————————— */
+#sound-btn, 
+#info-btn {
+    position: fixed;
+    top: 15px;
+    width: clamp(45px, 10vw, 70px);
+    height: clamp(45px, 10vw, 70px);
+    cursor: pointer;
+    z-index: 20;
+}
+
+#sound-btn { left: 15px; }
+#info-btn  { right: 15px; }
+
+/* ————————————————— TITLE ————————————————— */
+.title {
+    margin-top: 65px; 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title img {
+    width: clamp(70px, 18vw, 130px);
+}
+
+.title h1 {
+    margin: 10px 0 0;
+    font-family: 'Fredoka One', cursive;
+    font-size: clamp(28px, 6vw, 48px);
+    color: #195f3b;
+    text-shadow:
+        -2px -2px 0 #fff,
+         2px -2px 0 #fff,
+        -2px  2px 0 #fff,
+         2px  2px 0 #fff;
+    letter-spacing: 2px;
+}
+
+/* ————————————————— BUTTON HIJAU ASAL ————————————————— */
+.menu-btn {
+    display: block;
+    width: min(260px, 80%);
+    margin: 15px auto;
+    padding: 16px;
+
+    background: #8cd878;            /* warna hijau asal */
+    border: none;
+    border-radius: 35px;
+    box-shadow: 0px 4px #62b251;    /* shadow asal */
+    
+    font-size: clamp(18px, 4vw, 24px);
+    color: #0a331b;
+    font-family: 'Fredoka One', cursive;
+
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.menu-btn:active {
+    box-shadow: 0 2px #6ca55a;
+    transform: translateY(4px);
+}
+
+/* ————————————————— POPUP BOX ————————————————— */
+.info-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    width: min(90%, 500px);
+    background: white;
+    padding: 22px 20px;
+
+    border-radius: 22px;
+    box-shadow: 0 0 18px rgba(0,0,0,0.3);
+
+    display: none;
+    z-index: 999;
+
+    font-family: 'Baloo 2', cursive;
+    text-align: center;
+}
+
+.info-popup h2 {
+    margin-top: 0;
+    font-size: clamp(22px, 5vw, 30px);
+}
+
+.info-popup p {
+    font-size: clamp(14px, 4vw, 20px);
+    text-align: justify;
+}
+
+/* ————————————————— POPUP BUTTON ————————————————— */
+.close-popup,
+.download-btn {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Baloo 2', cursive;
+    font-size: clamp(16px, 4vw, 20px);
+    margin-top: 18px;
+}
+
+.download-btn {
+    display: block;
+    text-decoration: none;
+    color: white;
+    background: #4caf50;
+    box-shadow: 0 3px #2e7d32;
+    width: min(240px, 80%);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.close-popup {
+    background: #8cd878;
+}
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <!-- === ICON BUNYI === -->
+  <img id="sound-btn" src="image-menu/sound.png">
+
+  <!-- === ICON INFO === -->
+  <img id="info-btn" src="image-menu/info.png">
+
+  <!-- === TITLE === -->
+  <div class="title">
+    <img src="image-menu/logo.png">
+    <h1>ECO-RECYCLE</h1>
+  </div>
+
+  <!-- === BUTTON MENU (HIJAU ASAL) === -->
+  <button class="menu-btn" onclick="goMula()">MULA</button>
+  <button class="menu-btn" onclick="bukaCara()">CARA GUNA</button>
+  <button class="menu-btn" onclick="bukaDownload()">MUAT TURUN IMEJ SASARAN</button>
+
+</div>
+
+<!-- === POPUP INFO === -->
+<div id="info-popup" class="info-popup">
+  <h2>Maklumat & Kredit</h2>
+  <p>Dibangunkan oleh: <b>Nurul Syafikah Bt Gunar</b></p>
+	 <p>Penyelia: <b>Dr.Wan Nooraishya Wan Ahmad</b></p>
+  <p>Aplikasi ini direka untuk membantu kanak-kanak mengenali jenis bahan buangan, belajar kitar semula melalui AR, model 3D dan kuiz.</p>
+  <button class="close-popup" onclick="tutupInfo()">Tutup</button>
+</div>
+
+<!-- === POPUP CARA GUNA === -->
+<div id="cara-popup" class="info-popup">
+  <h2>Cara Guna Aplikasi</h2>
+  <p>1. Tekan <b>Mula</b> untuk melihat AR.</p>
+  <p>2. Halakan kamera ke kad (image target) untuk melihat AR.Tekan model 3D untuk henti dan mainkan semula suara narasi serta aktifkan rotasi model 3D.Klik ikon Info untuk lihat pop-up maklumat.</p>
+  <p>3. Tekan butang menu <b>Info</b> untuk lihat fakta menarik.Tekan setiap kad untuk mendengar audio maklumat.</p>
+  <p>4. Jawab kuiz untuk uji pengetahuan anda.</p>
+  <button class="close-popup" onclick="tutupCara()">Tutup</button>
+</div>
+
+<!-- === POPUP DOWNLOAD === -->
+<div id="download-popup" class="info-popup">
+  <h2>Muat Turun Kad AR</h2>
+  <p>Klik butang untuk memuat turun semua imej sasaran.</p>
+
+  <a class="download-btn" href="assets/targets.zip" download>Muat Turun</a>
+
+  <button class="close-popup" onclick="tutupDownload()">Tutup</button>
+</div>
+
+<!-- === BACKGROUND MUSIC === -->
+<audio id="bg-music" src="sounds/home/musicbg.mp3" loop autoplay></audio>
+
+<script>
+let music = document.getElementById("bg-music");
+let soundBtn = document.getElementById("sound-btn");
+let infoPopup = document.getElementById("info-popup");
+let caraPopup = document.getElementById("cara-popup");
+let downloadPopup = document.getElementById("download-popup");
+let soundOn = true;
+
+// Toggle Sound
+soundBtn.onclick = () => {
+    soundOn = !soundOn;
+    soundOn ? music.play() : music.pause();
+};
+
+// Navigation
+function goMula() { window.location.href = "mula.html"; }
+
+// OPEN POPUPS
+function bukaCara() { caraPopup.style.display = "block"; }
+function bukaDownload() { downloadPopup.style.display = "block"; }
+document.getElementById("info-btn").onclick = () => { infoPopup.style.display = "block"; };
+
+// CLOSE POPUPS
+function tutupInfo() { infoPopup.style.display = "none"; }
+function tutupCara() { caraPopup.style.display = "none"; }
+function tutupDownload() { downloadPopup.style.display = "none"; }
+</script>
+
+</body>
+</html>

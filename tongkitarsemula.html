@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tong Kitar Semula</title>
+<script src="/FYP/libs/mindar/mindar-image-three.prod.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: url("image-menu/menustart.png") no-repeat center center;
+        background-size: cover;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    @media (min-width: 768px) {
+        body {
+            background-attachment: fixed;
+        }
+    }
+
+    .container {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;   
+        align-items: center;       
+        text-align: center;
+        padding: 20px;           
+        box-sizing: border-box;
+    }
+
+    h2 {
+        font-size: clamp(18px, 4vw, 24px);
+        margin-bottom: 20px;
+        color: #333;
+        line-height: 1.5;
+    }
+
+    .bin-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 30px;
+        flex-wrap: wrap;
+        margin-top: 10px;
+    }
+
+    .bin-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 180px;
+    }
+
+    .bin-btn {
+        width: 100%;
+        max-width: 200px;
+        cursor: pointer;
+        transition: 0.2s;
+    }
+
+    .bin-btn:hover {
+        transform: scale(1.08);
+    }
+
+    .bin-label {
+        margin-top: 10px;
+        padding: 6px 12px;
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        background: #ffffffcc;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        text-align: center;
+        width: 100%;
+    }
+
+    #back-btn {
+        width: clamp(70px, 12vw, 110px);
+        position: fixed;
+        top: clamp(10px, 3vw, 20px);
+        left: clamp(10px, 3vw, 20px);
+        cursor: pointer;
+        transition: 0.2s;
+        object-fit: contain;
+        z-index: 999;
+    }
+
+    #back-btn:hover {
+        transform: scale(1.1);
+    }
+</style>
+</head>
+
+<body>
+
+<img id="back-btn" src="image-menu/back.png" onclick="goBack()">
+
+<div class="container">
+    <h2>
+        Adakah kamu tahu sampah apa yang<br>
+        sesuai dibuang dalam tong di bawah?<br>
+        Pilih satu untuk ketahuinya!
+    </h2>
+
+    <div class="bin-wrapper">
+
+        <div class="bin-item">
+            <img class="bin-btn" src="image-menu/bluebin.png"
+                 onclick="location.href='/FYP/coding/Tbiru/indextongb.html'">
+            <p class="bin-label">Tong Biru</p>
+        </div>
+
+        <div class="bin-item">
+            <img class="bin-btn" src="image-menu/brownbin.png"
+                 onclick="location.href='/FYP/coding/Tcoklat/indextongcok.html'">
+            <p class="bin-label">Tong Coklat</p>
+        </div>
+
+        <div class="bin-item">
+            <img class="bin-btn" src="image-menu/orangebin.png"
+                 onclick="location.href='/FYP/coding/Toren/indextongor.html'">
+            <p class="bin-label">Tong Oren</p>
+        </div>
+
+    </div>
+</div>
+
+<script>
+function goBack() {
+    window.location.href = 'imbasar.html';
+}
+</script>
+
+</body>
+</html>

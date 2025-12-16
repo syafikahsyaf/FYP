@@ -1,0 +1,373 @@
+<!doctype html>
+<html lang="ms">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Mini Kuiz</title>
+
+  <style>
+    :root{
+      --bg:#f7fbf3;
+      --card:#fff;
+      --accent:#f8b400;
+      --muted:#e8e0da;
+      --text:#222;
+    }
+
+    html,body{
+      margin:0;
+      padding:0;
+      font-family:'Poppins',sans-serif;
+      background-image:url("image-menu/menustart.png");
+      background-size:cover;
+      background-position:center;
+      background-repeat:no-repeat;
+      background-attachment:fixed;
+      color:var(--text);
+      min-height:100vh;
+      overflow-x:hidden;
+    }
+
+    /* =============================
+         MAIN FRAME (RESPONSIVE)
+    ============================= */
+    .frame{
+      width:100%;
+      max-width:900px;
+      margin:20px auto;
+      padding:20px;
+      border:4px solid #7a4fe8;
+      border-radius:10px;
+      background:rgba(255,255,255,0.2);
+      backdrop-filter:blur(4px);
+      box-sizing:border-box;
+      position:relative;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+
+    .score{
+      background:#fff;
+      border-radius:12px;
+      padding:8px 14px;
+      border:3px solid #f3e6f8;
+      box-shadow:0 3px 0 rgba(0,0,0,0.04);
+      font-weight:700;
+    }
+
+    /* =============================
+         QUIZ CARD
+    ============================= */
+    .quiz-area{
+      margin-top:18px;
+      background:var(--card);
+      border-radius:20px;
+      padding:24px;
+      box-shadow:0 12px 30px rgba(32,32,32,0.06);
+      min-height:300px;
+    }
+
+    .question-wrap{
+      display:flex;
+      gap:16px;
+    }
+
+    .avatar{
+      width:100px;
+      height:100px;
+      flex-shrink:0;
+    }
+
+    .avatar img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+      border-radius:50%;
+    }
+
+    .question-text{
+      font-size:20px;
+      line-height:1.4;
+      font-weight:600;
+    }
+
+    /* =============================
+         ANSWER BUTTONS (2X2 GRID)
+    ============================= */
+    .answers{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-top:22px;
+    }
+
+    .btn{
+      background:var(--muted);
+      padding:14px;
+      text-align:center;
+      border:2px solid #e0d4c9;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:600;
+      user-select:none;
+      transition:0.15s;
+      box-shadow:0 4px 0 rgba(0,0,0,0.05);
+    }
+    .btn:active{
+      transform:translateY(2px);
+      box-shadow:none;
+    }
+
+    /* =============================
+         BACK BUTTON (FIXED)
+    ============================= */
+    .back{
+      position:fixed;
+      left:12px;
+      top:12px;
+      width:80px;
+      height:80px;
+      z-index:9999;
+      cursor:pointer;
+    }
+
+    .back img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    @media(max-width:720px){
+      .back{
+        width:60px;
+        height:60px;
+        top:10px;
+        left:10px;
+      }
+    }
+
+    /* =============================
+         POPUP RESPONSIVE
+    ============================= */
+    .popup{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%, -50%) scale(0.85);
+      background:white;
+      padding:20px 26px;
+      border-radius:12px;
+      text-align:center;
+      min-width:240px;
+      opacity:0;
+      pointer-events:none;
+      transition:0.2s;
+      box-shadow:0 18px 50px rgba(0,0,0,0.18);
+    }
+
+    .popup.show{
+      opacity:1;
+      pointer-events:auto;
+      transform:translate(-50%, -50%) scale(1);
+    }
+
+    .popup.ok{ border:4px solid #a6f0b4; }
+    .popup.err{ border:4px solid #ffd1d1; }
+
+    footer{
+      margin-top:6px;
+      text-align:center;
+      font-size:14px;
+      opacity:0.9;
+    }
+
+    /* =============================
+         MOBILE RESPONSIVE FIX
+    ============================= */
+    @media (max-width:720px){
+      .frame{
+        margin:10px;
+        padding:14px;
+      }
+
+      .quiz-area{
+        padding:18px;
+      }
+
+      .question-wrap{
+        flex-direction:column;
+        text-align:center;
+      }
+
+      .avatar{
+        width:90px;
+        height:90px;
+        margin:0 auto;
+      }
+
+      .question-text{
+        font-size:18px;
+      }
+
+      .answers{
+        grid-template-columns:1fr;
+      }
+
+      .btn{
+        font-size:16px;
+        padding:12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="frame">
+    <header>
+      <div style="font-weight:800;font-size:28px">Kuiz Kitar Semula</div>
+      <div class="score">Skor: <span id="score">0</span></div>
+    </header>
+
+    <main class="quiz-area">
+      <div class="question-wrap">
+        <div class="avatar">
+          <img src="image-menu/recycokuiz.png">
+        </div>
+
+        <div style="flex:1">
+          <div class="question-text" id="question">Memuatkan soalan...</div>
+          <div class="answers" id="answers"></div>
+        </div>
+      </div>
+    </main>
+
+    <div class="popup" id="popup">
+      <img id="popupImg" src="" style="width:110px;height:110px;">
+      <div id="popupText" style="margin-top:10px;font-weight:700;"></div>
+    </div>
+
+    <footer>Petua: Tekan jawapan yang betul dan ulangi kuiz jika salah.</footer>
+  </div>
+
+  <!-- BACK BUTTON KELUAR FRAME -->
+  <div class="back" id="backBtn">
+    <img src="image-menu/back.png">
+  </div>
+
+
+<script>
+const questions = [
+  {q:'Sampah jenis kertas boleh dibuang dalam tong?',choices:['Tong biru','Tong coklat','Tong jingga','Tong hijau'],correct:0},
+  {q:'Botol plastik seharusnya dibuang ke tong?',choices:['Tong hijau','Tong biru','Tong coklat','Tong jingga'],correct:3},
+  {q:'Sisa makanan sesuai untuk?',choices:['Tong jingga','Kompos','Tong biru','Tong coklat'],correct:1},
+  {q:'Bateri terbuang mesti?',choices:['Tong coklat','Tong hijau','Kutipan khas','Tong biru'],correct:2},
+  {q:'Adakah Cermin boleh dibuang dalam tong coklat?',choices:['Boleh','Tidak'],correct:1},
+  {q:'Apakah maksud simbol kitar semula berbentuk tiga anak panah?',choices:['Bahan boleh dimakan','Bahan berbahaya','Bahan boleh dikitar semula','Bahan boleh dibakar'],correct:2}
+];
+
+let idx = 0, score = 0;
+
+const qEl = document.getElementById('question');
+const ansEl = document.getElementById('answers');
+const scoreEl = document.getElementById('score');
+const popup = document.getElementById('popup');
+const popupText = document.getElementById('popupText');
+const popupImg = document.getElementById('popupImg');
+
+function renderQuestion(){
+  const item = questions[idx];
+  qEl.textContent = item.q;
+  ansEl.innerHTML = '';
+
+  item.choices.forEach((c,i)=>{
+    const b = document.createElement('div');
+    b.className = 'btn';
+    b.textContent = c;
+    b.onclick = ()=> select(i);
+    ansEl.appendChild(b);
+  });
+}
+
+function select(choice){
+  const item = questions[idx];
+
+  if(choice === item.correct){
+    score++;
+    scoreEl.textContent = score;
+    showPopup(true,'Yeahhh betul!');
+    setTimeout(()=> nextQuestion(),900);
+  } else {
+    showPopup(false,'Jawapan salah!');
+    setTimeout(()=> gameOver(),1100);
+  }
+}
+
+function nextQuestion(){
+  hidePopup();
+  idx++;
+  if(idx >= questions.length) return endQuiz();
+  renderQuestion();
+}
+
+function gameOver(){
+  hidePopup();
+  qEl.textContent = 'Game Over!';
+  ansEl.innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;font-weight:700;font-size:24px">
+      Skor Akhir: ${score}
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <img src="image-menu/Recycosad.png" style="width:150px;">
+    </div>
+    <button id="retryBtn" style="margin-top:14px;padding:12px 18px;font-size:18px;border:none;border-radius:10px;background:#4CAF50;color:white;">
+      Cuba Lagi
+    </button>
+  `;
+  document.getElementById('retryBtn').onclick = resetGame;
+}
+
+function endQuiz(){
+
+  hidePopup();
+  qEl.textContent = 'Tahniah! Kuiz selesai.';
+  ansEl.innerHTML = `
+    <div style="grid-column:1/-1;text-align:center;font-weight:700;font-size:28px">
+      Skor Akhir: ${score}
+    </div>
+    <div style="text-align:center;margin-top:10px;">
+      <img src="image-menu/rehappy.png" style="width:150px;">
+    </div>
+    <button id="retryBtn" style="margin-top:14px;padding:12px 18px;font-size:18px;border:none;border-radius:10px;background:#ff9800;color:white;">
+      Ulang Kuiz
+    </button>
+  `;
+  document.getElementById('retryBtn').onclick = resetGame;
+}
+
+function resetGame(){
+  idx = 0;
+  score = 0;
+  scoreEl.textContent = score;
+  renderQuestion();
+}
+
+function showPopup(ok,text){
+  popup.className = 'popup show ' + (ok ? 'ok':'err');
+  popupImg.src = ok?'image-menu/rehappy.png':'image-menu/Recycosad.png';
+  popupText.textContent = text;
+}
+
+function hidePopup(){ popup.classList.remove('show'); }
+
+document.getElementById('backBtn').onclick = ()=> history.back();
+
+renderQuestion();
+</script>
+
+</body>
+</html>

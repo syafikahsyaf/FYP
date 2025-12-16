@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menu Aktiviti</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Fredoka:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: url("image-menu/menu.png") no-repeat center center;
+      background-size: cover;
+      background-attachment: scroll;
+      overflow: hidden;
+    }
+
+    .container {
+      height: 100vh;
+      max-width: 600px;
+      margin: auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h2 {
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 600;
+      color: #1a4d2e;
+      margin-bottom: 20px;
+      line-height: 1.3;
+      text-shadow: 1px 1px 2px rgba(255,255,255,0.7);
+    }
+
+    .menu-btn {
+        display: block;
+        width: min(260px, 80%);
+        margin: 15px auto;
+        padding: 16px;
+        background: #8cd878;
+        border: none;
+        border-radius: 35px;
+        font-size: clamp(18px, 4vw, 24px);
+        color: #0a331b;
+        font-family: 'Fredoka One', cursive;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0px 4px #62b251;
+    }
+
+    .menu-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .menu-btn:active {
+      box-shadow: 0 2px #7abf63;
+      transform: translateY(4px);
+    }
+
+    /* BACK BUTTON — ATAS KIRI */
+    #back-btn {
+      position: fixed;
+      top: clamp(10px, 3vw, 20px);
+      left: clamp(10px, 3vw, 20px);
+      width: clamp(70px, 12vw, 110px);
+      cursor: pointer;
+      transition: 0.2s;
+      object-fit: contain;
+    }
+
+    #back-btn:hover {
+      transform: scale(1.1);
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="container">
+
+  <h2>Jom mula!<br>Pilih aktiviti di bawah</h2>
+
+  <button class="menu-btn" onclick="imbasAR()">IMBAS AR</button>
+  <button class="menu-btn" onclick="bukaInfo()">INFO</button>
+  <button class="menu-btn" onclick="bukaKuiz()">KUIZ</button>
+
+  <img id="back-btn" src="image-menu/back.png" onclick="goBack()">
+
+</div>
+
+<audio id="bg-music" src="" loop autoplay></audio>
+
+<script>
+  function goBack() {
+    window.location.href = "EcoHome.html";
+  }
+
+  function imbasAR() {
+    window.location.href = "imbasar.html";
+  }
+
+  function bukaInfo() {
+    window.location.href = "info.html";  
+  }
+
+  function bukaKuiz() {
+    window.location.href = "kuiz.html";
+  }
+</script>
+
+</body>
+</html>

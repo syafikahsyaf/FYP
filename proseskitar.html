@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Eco-Recycle - Proses Kitar Semula</title>
+
+<!-- IMPORT FONT -->
+<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        font-family: 'Poppins', sans-serif;
+        background: url("image-menu/menustart.png") no-repeat center center;
+        background-size: cover;
+        background-attachment: scroll;
+        overflow: hidden;
+    }
+
+    /* CENTERKAN CONTENT */
+    .container {
+        min-height: 100vh;
+        max-width: 600px;
+        margin: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    h2 {
+        font-size: clamp(20px, 5vw, 28px);
+        color: #173c2b;
+        margin-bottom: 25px;
+        line-height: 1.5;
+    }
+
+    /* BUTTON — FREDOKA ONE */
+    .menu-btn {
+        display: block;
+        width: min(260px, 80%);
+        margin: 12px auto;
+        padding: 16px;
+        background: #8cd878;
+        border: none;
+        border-radius: 35px;
+        font-size: clamp(18px, 4vw, 24px);
+        color: #0a331b;
+        font-family: 'Fredoka One', cursive;
+        cursor: pointer;
+        transition: 0.2s;
+        box-shadow: 0px 4px #62b251;
+    }
+
+    .menu-btn:hover {
+        transform: scale(1.05);
+    }
+
+    /* BACK BUTTON — ATAS KIRI */
+    #back-btn {
+        width: clamp(70px, 12vw, 110px);
+        position: fixed;
+        top: clamp(10px, 3vw, 20px);
+        left: clamp(10px, 3vw, 20px);
+        cursor: pointer;
+        transition: 0.2s;
+        object-fit: contain;
+    }
+
+    #back-btn:hover {
+        transform: scale(1.1);
+    }
+
+    /* RESPONSIVE PHONE */
+    @media (max-width: 768px) {
+        h2 {
+            font-size: clamp(18px, 4vw, 24px);
+        }
+
+        .menu-btn {
+            width: 80%;
+            padding: 14px;
+            font-size: clamp(16px, 4vw, 20px);
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+    <h2>
+        Pilih kategori bahan untuk melihat<br>
+        proses kitar semulanya dalam AR!
+    </h2>
+
+    <button class="menu-btn" onclick="location.href='/FYP/coding/Pkertas/indexpkertas.html'">KERTAS</button>
+    <button class="menu-btn" onclick="location.href='/FYP/coding/Pkaca/indexpkaca.html'">KACA</button>
+    <button class="menu-btn" onclick="location.href='/FYP/coding/Pplastik/indexpplastik.html'">PLASTIK</button>
+    <button class="menu-btn" onclick="location.href='/FYP/coding/Plogam/indexplogam.html'">LOGAM</button>
+</div>
+
+<audio id="bg-music" src="" loop autoplay></audio>
+<img id="back-btn" src="image-menu/back.png" onclick="location.href='imbasar.html'">
+
+</body>
+</html>
