@@ -8,13 +8,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const start = async () => {
     try {
 
-      /* ===========================================================
-         BUTTON: BACK + INFO
-      ============================================================ */
+      /* =====================
+         BUTTON BACK + INFO
+      ====================== */
       const backBtn = document.createElement("a");
       backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%; height:auto; object-fit:contain;">`;
       backBtn.onclick = () => window.location.href = "/FYP/tongkitarsemula.html";
-
       Object.assign(backBtn.style, {
         position: "fixed",
         top: "clamp(10px, 3vw, 20px)",
@@ -81,9 +80,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      /* ===========================================================
+      /* =====================
          MINDAR INIT
-      ============================================================ */
+      ====================== */
       const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
         imageTargetSrc: "/FYP/assets/targets/tongkitar/tongbiru3.mind",
@@ -99,9 +98,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const gltfLoader = new GLTFLoader();
       gltfLoader.setDRACOLoader(dLoader);
 
-      /* ===========================================================
+      /* =====================
          TARGETS
-      ============================================================ */
+      ====================== */
       const targets = [
         { glb: "/FYP/assets/models/Mtongkitar/kertasmain.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru1.mp3", scale: 0.2, info: "Tong biru sesuai untuk sampah jenis kertas" },
         { glb: "/FYP/assets/models/Mtongkitar/kertas1.glb", audioMain: "/FYP/assets/suara/Stongkitar/tbiru2.mp3", scale: 0.2, info: "Bahan kertas yang boleh dikitar semula adalah seperti surat khabar, kotak kertas dan sampul surat" },
@@ -112,9 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const listener = new THREE.AudioListener();
       camera.add(listener);
 
-      /* ===========================================================
+      /* =====================
          AUDIO UNLOCK
-      ============================================================ */
+      ====================== */
       let audioUnlocked = false;
       const unlockAudio = () => {
         if (audioUnlocked) return;
@@ -125,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
       document.addEventListener("touchstart", unlockAudio, { once: true });
       document.addEventListener("click", unlockAudio, { once: true });
 
-      /* ===========================================================
+      /* =====================
          LOAD TARGETS
-      ============================================================ */
+      ====================== */
       for (let i = 0; i < targets.length; i++) {
         const anchor = mindarThree.addAnchor(i);
 
@@ -166,93 +165,87 @@ document.addEventListener('DOMContentLoaded', () => {
         };
       }
 
-      /* ===========================================================
+      /* =====================
          FAILSAFE AUDIO STOP
-      ============================================================ */
+      ====================== */
       setInterval(() => {
         if (!targets.some(t => t.active)) {
           targets.forEach(t => { if (t.mainAudio && t.mainAudio.isPlaying) t.mainAudio.pause(); });
         }
       }, 500);
 
-      /* ===========================================================
-         TAP AUDIO
-      ============================================================ */
+      /* =====================
+         TAP AUDIO + ROTATE
+      ====================== */
       const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
-      const TAP_THRESHOLD = isMobile ? 18 : 8;
-      const MOVE_START_THRESHOLD = 5;
-
+      let lastTap = 0;
       let dragging = false, dragDist = 0, sx = 0, sy = 0, hasMoved = false;
 
       const tryTap = (x, y) => {
+        const now = Date.now();
+        const activeIndex = targets.findIndex(t => t.active);
+        if (activeIndex === -1) return;
+        const t = targets[activeIndex];
+        const group = mindarThree.anchors[activeIndex].group;
+        if (!t.mainAudio || !t.audioReady) return;
+
         const mouse = new THREE.Vector2();
         mouse.x = (x / window.innerWidth) * 2 - 1;
         mouse.y = -(y / window.innerHeight) * 2 + 1;
 
         const raycaster = new THREE.Raycaster();
         raycaster.setFromCamera(mouse, camera);
-
-        const activeIndex = targets.findIndex(t => t.active);
-        if (activeIndex === -1) return;
-
-        const t = targets[activeIndex];
-        const group = mindarThree.anchors[activeIndex].group;
-        if (!t.mainAudio || !t.audioReady) return;
-
         const intersects = raycaster.intersectObjects(group.children, true);
         if (intersects.length === 0) return;
 
-        t.mainAudio.isPlaying ? t.mainAudio.pause() : t.mainAudio.play();
+        if (isMobile) {
+          if (now - lastTap < 300) { // double tap
+            t.mainAudio.isPlaying ? t.mainAudio.pause() : t.mainAudio.play();
+          }
+          lastTap = now;
+        } else {
+          t.mainAudio.isPlaying ? t.mainAudio.pause() : t.mainAudio.play();
+        }
       };
 
-      /* ===== MOBILE TOUCH ===== */
+      const TAP_THRESHOLD = isMobile ? 18 : 8;
+      const MOVE_START_THRESHOLD = 5;
+
+      /* MOBILE TOUCH */
       document.addEventListener("touchstart", (e) => {
         dragging = true; dragDist = 0; hasMoved = false;
         sx = e.touches[0].clientX; sy = e.touches[0].clientY;
       });
       document.addEventListener("touchmove", (e) => {
         if (!dragging) return;
-
         const x = e.touches[0].clientX;
         const y = e.touches[0].clientY;
-        const dx = x - sx;
-        const dy = y - sy;
-
+        const dx = x - sx; const dy = y - sy;
         if (Math.abs(dx) + Math.abs(dy) > MOVE_START_THRESHOLD) hasMoved = true;
-
-        if (hasMoved) {
-          targets.forEach(t => { if (t.active && t.model) { t.model.rotation.y += dx * 0.008; t.model.rotation.x += dy * 0.008; } });
-        }
-
+        if (hasMoved) targets.forEach(t => { if (t.active && t.model) { t.model.rotation.y += dx * 0.008; t.model.rotation.x += dy * 0.008; } });
         dragDist += Math.abs(dx) + Math.abs(dy);
         sx = x; sy = y;
       });
       document.addEventListener("touchend", (e) => {
-        if (!hasMoved || dragDist < TAP_THRESHOLD) {
-          const t = e.changedTouches[0];
-          tryTap(t.clientX, t.clientY);
-        }
+        if (!hasMoved || dragDist < TAP_THRESHOLD) tryTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
         dragging = false;
       });
 
-      /* ===== LAPTOP CLICK ===== */
+      /* LAPTOP CLICK */
       document.addEventListener("click", (e) => tryTap(e.clientX, e.clientY));
 
-      /* ===== ROTATE DESKTOP ===== */
+      /* DESKTOP ROTATE */
       let isDragging = false, prevX = 0, prevY = 0;
       document.addEventListener("mousedown", (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
       document.addEventListener("mouseup", () => isDragging = false);
       document.addEventListener("mousemove", (e) => {
         if (!isDragging) return;
-        const dx = e.clientX - prevX;
-        const dy = e.clientY - prevY;
+        const dx = e.clientX - prevX, dy = e.clientY - prevY;
         targets.forEach(t => { if (t.active && t.model) { t.model.rotation.y += dx * 0.01; t.model.rotation.x += dy * 0.01; } });
         prevX = e.clientX; prevY = e.clientY;
       });
 
-      /* ===========================================================
-         START MINDAR
-      ============================================================ */
+      /* START MINDAR */
       await mindarThree.start();
       const clock = new THREE.Clock();
       renderer.setAnimationLoop(() => {
