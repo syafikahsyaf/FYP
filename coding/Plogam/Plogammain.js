@@ -8,73 +8,63 @@ document.addEventListener('DOMContentLoaded', () => {
   const start = async () => {
     try {
 
-      /* ===========================================================
-         BUTTON: BACK + AUDIO + INFO
-      ============================================================ */
-     const backBtn = document.createElement("a");
-backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%; height:auto; object-fit:contain;">`;
+      /* =====================
+         BUTTON BACK + INFO
+      ====================== */
+      const backBtn = document.createElement("a");
+      backBtn.innerHTML = `<img src="/FYP/image-menu/back.png" style="width:100%; height:auto; object-fit:contain;">`;
+      backBtn.onclick = () => window.location.href = "/FYP/proseskitar.html";
+      Object.assign(backBtn.style, {
+        position: "fixed",
+        top: "clamp(10px, 3vw, 20px)",
+        left: "clamp(10px, 3vw, 20px)",
+        width: "clamp(70px, 12vw, 110px)",
+        cursor: "pointer",
+        zIndex: "9999",
+        textDecoration: "none",
+        display: "block"
+      });
+      document.body.appendChild(backBtn);
 
-// redirect
-backBtn.onclick = () => {
-  window.location.href = "/FYP/proseskitar.html";
-};
-
-// style backBtn
-Object.assign(backBtn.style, {
-  position: "fixed",             // gunakan fixed supaya sentiasa atas screen
-  top: "clamp(10px, 3vw, 20px)",
-  left: "clamp(10px, 3vw, 20px)",
-  width: "clamp(70px, 12vw, 110px)", // responsive width
-  cursor: "pointer",
-  zIndex: "9999",
-  textDecoration: "none",
-  display: "block",             // pastikan <a> ikut width gambar
-});
-
-// append
-document.body.appendChild(backBtn);
-
-
-
-      
       const infoBtn = document.createElement("div");
       infoBtn.innerHTML = "💡";
-      infoBtn.style.position = "absolute";
-      infoBtn.style.top = "10px";
-      infoBtn.style.right = "20px";
-      infoBtn.style.fontSize = "50px";
-      infoBtn.style.cursor = "pointer";
-      infoBtn.style.zIndex = "9999";
+      Object.assign(infoBtn.style, {
+        position: "absolute",
+        top: "10px",
+        right: "20px",
+        fontSize: "50px",
+        cursor: "pointer",
+        zIndex: "9999",
+        userSelect: "none"
+      });
       document.body.appendChild(infoBtn);
 
-      /* ===========================================================
-         INFO TEXT (GLOBAL)
-      ============================================================ */
       const infoText = document.createElement("div");
       infoText.innerText = "INFO";
-      infoText.style.position = "absolute";
-      infoText.style.bottom = "30px";
-      infoText.style.left = "50%";
-      infoText.style.transform = "translateX(-50%) scale(0.9)";
-      infoText.style.padding = "18px 28px";
-      infoText.style.maxWidth = "85%";
-      infoText.style.background = "#8cd878";
-      infoText.style.border = "3px solid #5faa48";
-      infoText.style.color = "#1e4d14";
-      infoText.style.fontSize = "24px";
-      infoText.style.fontWeight = "bold";
-      infoText.style.fontFamily = "'Comic Sans MS','Poppins'";
-      infoText.style.borderRadius = "25px";
-      infoText.style.boxShadow = "0px 8px 18px rgba(80,150,90,0.3)";
-      infoText.style.display = "none";
-      infoText.style.opacity = "0";
-      infoText.style.transition = "all .25s ease";
-      infoText.style.zIndex = "9999";
+      Object.assign(infoText.style, {
+        position: "fixed",
+        bottom: "12px",
+        left: "50%",
+        transform: "translateX(-50%)",
+        padding: "14px 20px",
+        maxWidth: "92%",
+        background: "#8cd878",
+        border: "3px solid #5faa48",
+        color: "#1e4d14",
+        fontSize: "clamp(16px, 4vw, 22px)",
+        fontWeight: "bold",
+        fontFamily: "'Comic Sans MS','Poppins'",
+        borderRadius: "25px",
+        boxShadow: "0px 8px 18px rgba(80,150,90,0.3)",
+        display: "none",
+        pointerEvents: "none",
+        opacity: "0",
+        transition: "all .25s ease",
+        zIndex: "9999"
+      });
       document.body.appendChild(infoText);
 
-
       let infoShown = false;
-
       infoBtn.onclick = () => {
         infoShown = !infoShown;
         if (infoShown) {
@@ -90,9 +80,9 @@ document.body.appendChild(backBtn);
         }
       };
 
-      /* ===========================================================
+      /* =====================
          MINDAR INIT
-      ============================================================ */
+      ====================== */
       const mindarThree = new window.MINDAR.IMAGE.MindARThree({
         container: document.body,
         imageTargetSrc: "/FYP/assets/targets/proseskitar/Plogam1.mind",
@@ -108,40 +98,16 @@ document.body.appendChild(backBtn);
       const gltfLoader = new GLTFLoader();
       gltfLoader.setDRACOLoader(dLoader);
 
-      /* ===========================================================
-         3 MODEL + 3 AUDIO + 3 TARGET
-      ============================================================ */
+      /* =====================
+         TARGETS
+      ====================== */
       const targets = [
-        {
-          glb: "/FYP/assets/models/Mproseskitar/Plogam1.glb",
-          audioMain: "/FYP/assets/suara/Sproseskitar/Splogam1.mp3",
-                    scale: 0.2,
-          info: "Semua tin minuman, makanan dan logam lama dikumpul. Kemudian dipisahkan mengikut jenisnya dan disusun untuk memudahkan proses kitar semula."
-        },
-        {
-          glb: "/FYP/assets/models/Mproseskitar/Plogam2.glb",
-          audioMain: "/FYP/assets/suara/Sproseskitar/Splogam2.mp3",
-                   scale: 0.2,
-          info: " Logam besar dipotong dan digilis menjadi kepingan kecil untuk memudahkan ia cepat cair bila dipanaskan."
-        },
-        {
-          glb: "/FYP/assets/models/Mproseskitar/Plogam3.glb",
-          audioMain: "/FYP/assets/suara/Sproseskitar/Splogam3.mp3",
-                   scale: 0.18,
-          info: "Kepingan logam dimasukkan ke dalam relau besar yang sangat panas untuk mencairkan logam."
-        },
-{
-          glb: "/FYP/assets/models/Mproseskitar/Plogam4.glb",
-          audioMain: "/FYP/assets/suara/Sproseskitar/Splogam4.mp3",
-                   scale: 0.18,
-          info: "Apabila logam sudah cair, ia dituang ke dalam acuan dan perlahan-lahan ia membentuk benda baru."
-        },
-{
-          glb: "/FYP/assets/models/Mproseskitar/Plogam5.glb",
-          audioMain: "/FYP/assets/suara/Sproseskitar/Splogam5.mp3",
-                   scale: 0.18,
-          info: "Dari logam lama lahirlah logam baru yang kuat dan tahan lama. Ia boleh menjadi rim tayar kereta, sudu dan garpu dan banyak lagi. Logam boleh dikitar semula berkali-kali tanpa hilang kekuatannya."
-        }
+        { glb:"/FYP/assets/models/Mproseskitar/Plogam1.glb", audioMain:"/FYP/assets/suara/Sproseskitar/Splogam1.mp3", scale:0.11, info:"Semua tin minuman, makanan dan logam lama dikumpul. Kemudian dipisahkan mengikut jenisnya dan disusun untuk memudahkan proses kitar semula." },
+        { glb:"/FYP/assets/models/Mproseskitar/Plogam2.glb", audioMain:"/FYP/assets/suara/Sproseskitar/Splogam2.mp3", scale:0.11, info:" Logam besar dipotong dan digilis menjadi kepingan kecil untuk memudahkan ia cepat cair bila dipanaskan." },
+        { glb:"/FYP/assets/models/Mproseskitar/Plogam3.glb", audioMain:"/FYP/assets/suara/Sproseskitar/Splogam3.mp3", scale:0.11, info:" Kepingan logam dimasukkan ke dalam relau besar yang sangat panas untuk mencairkan logam." },
+        { glb:"/FYP/assets/models/Mproseskitar/Plogam4.glb", audioMain:"/FYP/assets/suara/Sproseskitar/Splogam4.mp3", scale:0.11, info:"Apabila logam sudah cair, ia dituang ke dalam acuan dan perlahan-lahan ia membentuk benda baru." },
+        { glb:"/FYP/assets/models/Mproseskitar/Plogam5.glb", audioMain:"/FYP/assets/suara/Sproseskitar/Splogam5.mp3", scale:0.20, info:"Dari logam lama lahirlah logam baru yang kuat dan tahan lama. Ia boleh menjadi rim tayar kereta, sudu dan garpu dan banyak lagi. Logam boleh dikitar semula berkali-kali tanpa hilang kekuatannya." }
+
 
       ];
 
@@ -149,173 +115,142 @@ document.body.appendChild(backBtn);
       const listener = new THREE.AudioListener();
       camera.add(listener);
 
+      /* =====================
+         AUDIO UNLOCK
+      ====================== */
+      let audioUnlocked = false;
+      const unlockAudio = () => {
+        if (audioUnlocked) return;
+        const ctx = THREE.AudioContext.getContext();
+        if (ctx.state === "suspended") ctx.resume();
+        audioUnlocked = true;
+      };
+      document.addEventListener("touchstart", unlockAudio, { once: true });
+      document.addEventListener("click", unlockAudio, { once: true });
+
+      /* =====================
+         LOAD TARGETS
+      ====================== */
       for (let i = 0; i < targets.length; i++) {
         const anchor = mindarThree.addAnchor(i);
 
-        /* -------- LOAD GLB -------- */
         const gltf = await new Promise((resolve, reject) => {
           gltfLoader.load(targets[i].glb, resolve, undefined, reject);
         });
-
         gltf.scene.scale.set(targets[i].scale, targets[i].scale, targets[i].scale);
         anchor.group.add(gltf.scene);
-	targets[i].modelScene = gltf.scene; 
+        targets[i].model = gltf.scene;
 
-        /* -------- Animation -------- */
         const mixer = new THREE.AnimationMixer(gltf.scene);
-        if (gltf.animations.length > 0) {
-          mixer.clipAction(gltf.animations[0]).play();
-        }
+        if (gltf.animations.length > 0) mixer.clipAction(gltf.animations[0]).play();
         mixers.push(mixer);
 
-        /* -------- AUDIO MAIN -------- */
-        const clip1 = await loadAudio(targets[i].audioMain);
-        const mainAudio = new THREE.PositionalAudio(listener);
-        mainAudio.setBuffer(clip1);
-        mainAudio.setLoop(true);
-        mainAudio.setRefDistance(999999);
-        anchor.group.add(mainAudio);
-        targets[i].mainAudio = mainAudio;
+        const clip = await loadAudio(targets[i].audioMain);
+        const audio = new THREE.PositionalAudio(listener);
+        audio.setBuffer(clip);
+        audio.setLoop(true);
+        audio.setRefDistance(999999);
+        anchor.group.add(audio);
+        targets[i].mainAudio = audio;
+        targets[i].audioReady = true;
 
-
-               /* -------- TARGET FOUND -------- */
-       anchor.onTargetFound = () => {
- 	 targets[i].active = true;
-
-
+        /* Target found / lost */
+        anchor.onTargetFound = () => {
+          targets[i].active = true;
           infoText.innerText = targets[i].info;
-
-	// stop all other audio
-          targets.forEach((t, idx) => {
-            if (idx !== i && t.mainAudio) t.mainAudio.pause();
-          });
-
-        // 🔥 AUTO PLAY BILA DETECT
-  if (targets[i].mainAudio && !targets[i].mainAudio.isPlaying) {
-    try {
-          targets[i].mainAudio.currentTime = 0;
-            } catch (err) {
-              // beberapa implementasi PositionalAudio mungkin tidak beri currentTime setter — safe guard
-            }
-            targets[i].mainAudio.play();
-          }
+          targets.forEach((t, idx) => { if (idx !== i && t.mainAudio) t.mainAudio.pause(); });
         };
-
-        /* -------- TARGET LOST -------- */
         anchor.onTargetLost = () => {
- 	 targets[i].active = false;
- // STOP AUDIO SERTA-MERTA
+          targets[i].active = false;
           if (targets[i].mainAudio) {
             targets[i].mainAudio.pause();
-            try {
-              targets[i].mainAudio.currentTime = 0; // reset supaya bila detect lagi, sync mula dari awal
-            } catch (err) {
-              // ignore jika tidak supported
-            }
+            try { targets[i].mainAudio.currentTime = 0; } catch {}
           }
-
- 	};
-
+        };
       }
 
-/* ===========================================================
-         FAILSAFE AUDIO STOP (if no target active)
-      ============================================================ */
+      /* =====================
+         FAILSAFE AUDIO STOP
+      ====================== */
       setInterval(() => {
-        const anyActive = targets.some(t => t.active);
-        if (!anyActive) {
-          targets.forEach(t => {
-            if (t.mainAudio && t.mainAudio.isPlaying) {
-              t.mainAudio.pause();
-              try {
-                t.mainAudio.currentTime = 0;
-              } catch (err) { }
-            }
-          });
+        if (!targets.some(t => t.active)) {
+          targets.forEach(t => { if (t.mainAudio && t.mainAudio.isPlaying) t.mainAudio.pause(); });
         }
       }, 500);
 
+      /* =====================
+         TAP AUDIO + ROTATE
+      ====================== */
+      const isMobile = /Android|iPhone|iPad/i.test(navigator.userAgent);
+      let lastTap = 0;
+      let dragging = false, dragDist = 0, sx = 0, sy = 0, hasMoved = false;
 
-/* ===========================================================
-   TAP / CLICK MODEL UNTUK PAUSE / PLAY
-=========================================================== */
+      const tryTap = (x, y) => {
+        const now = Date.now();
+        const activeIndex = targets.findIndex(t => t.active);
+        if (activeIndex === -1) return;
+        const t = targets[activeIndex];
+        const group = mindarThree.anchors[activeIndex].group;
+        if (!t.mainAudio || !t.audioReady) return;
 
-const detectTap = (x, y) => {
-  const mouse = new THREE.Vector2();
-  mouse.x = (x / window.innerWidth) * 2 - 1;
-  mouse.y = -(y / window.innerHeight) * 2 + 1;
+        const mouse = new THREE.Vector2();
+        mouse.x = (x / window.innerWidth) * 2 - 1;
+        mouse.y = -(y / window.innerHeight) * 2 + 1;
 
-  const raycaster = new THREE.Raycaster();
-  raycaster.setFromCamera(mouse, camera);
+        const raycaster = new THREE.Raycaster();
+        raycaster.setFromCamera(mouse, camera);
+        const intersects = raycaster.intersectObjects(group.children, true);
+        if (intersects.length === 0) return;
 
-  // cari target active sahaja
-  const activeIndex = targets.findIndex(t => t.active);
-  if (activeIndex === -1) return;
+        if (isMobile) {
+          if (now - lastTap < 300) { // double tap
+            t.mainAudio.isPlaying ? t.mainAudio.pause() : t.mainAudio.play();
+          }
+          lastTap = now;
+        } else {
+          t.mainAudio.isPlaying ? t.mainAudio.pause() : t.mainAudio.play();
+        }
+      };
 
-  const t = targets[activeIndex];
-  const sceneObj = mindarThree.anchors[activeIndex].group;
+      const TAP_THRESHOLD = isMobile ? 18 : 8;
+      const MOVE_START_THRESHOLD = 5;
 
-  const intersects = raycaster.intersectObjects(sceneObj.children, true);
-
-  if (intersects.length > 0) {
-    const audio = t.mainAudio;
-
-    if (audio.isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
-  }
-};
-
-/* Mobile tap */
-document.addEventListener("touchstart", (e) => {
-  const touch = e.touches[0];
-  detectTap(touch.clientX, touch.clientY);
-});
-
-/* Laptop click */
-document.addEventListener("click", (e) => {
-  detectTap(e.clientX, e.clientY);
-});
-
-      
-      /* ===========================================================
-         ROTATE + ZOOM (GLOBAL)
-      ============================================================ */
-      let isDragging = false, prevX = 0, prevY = 0;
-
-      document.addEventListener("mousedown", (e) => {
-        isDragging = true;
-        prevX = e.clientX;
-        prevY = e.clientY;
+      /* MOBILE TOUCH */
+      document.addEventListener("touchstart", (e) => {
+        dragging = true; dragDist = 0; hasMoved = false;
+        sx = e.touches[0].clientX; sy = e.touches[0].clientY;
+      });
+      document.addEventListener("touchmove", (e) => {
+        if (!dragging) return;
+        const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+        const dx = x - sx; const dy = y - sy;
+        if (Math.abs(dx) + Math.abs(dy) > MOVE_START_THRESHOLD) hasMoved = true;
+        if (hasMoved) targets.forEach(t => { if (t.active && t.model) { t.model.rotation.y += dx * 0.008; t.model.rotation.x += dy * 0.008; } });
+        dragDist += Math.abs(dx) + Math.abs(dy);
+        sx = x; sy = y;
+      });
+      document.addEventListener("touchend", (e) => {
+        if (!hasMoved || dragDist < TAP_THRESHOLD) tryTap(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+        dragging = false;
       });
 
-      document.addEventListener("mouseup", () => (isDragging = false));
+      /* LAPTOP CLICK */
+      document.addEventListener("click", (e) => tryTap(e.clientX, e.clientY));
 
+      /* DESKTOP ROTATE */
+      let isDragging = false, prevX = 0, prevY = 0;
+      document.addEventListener("mousedown", (e) => { isDragging = true; prevX = e.clientX; prevY = e.clientY; });
+      document.addEventListener("mouseup", () => isDragging = false);
       document.addEventListener("mousemove", (e) => {
         if (!isDragging) return;
-
-        const dx = e.clientX - prevX;
-        const dy = e.clientY - prevY;
-
-        // rotate active model
-        targets.forEach(t => {
-          if (t.active && t.modelScene) {
-            t.modelScene.rotation.y += dx * 0.01;
-            t.modelScene.rotation.x += dy * 0.01;
-          }
-        });
-
-        prevX = e.clientX;
-        prevY = e.clientY;
+        const dx = e.clientX - prevX, dy = e.clientY - prevY;
+        targets.forEach(t => { if (t.active && t.model) { t.model.rotation.y += dx * 0.01; t.model.rotation.x += dy * 0.01; } });
+        prevX = e.clientX; prevY = e.clientY;
       });
 
-      /* ===========================================================
-         START MINDAR
-      ============================================================ */
+      /* START MINDAR */
       await mindarThree.start();
-
       const clock = new THREE.Clock();
       renderer.setAnimationLoop(() => {
         const delta = clock.getDelta();
@@ -330,4 +265,3 @@ document.addEventListener("click", (e) => {
 
   start();
 });
-
